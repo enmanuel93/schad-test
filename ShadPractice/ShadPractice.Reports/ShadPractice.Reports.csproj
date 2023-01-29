@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ShadPractice.Core\ShadPractice.Core.csproj" />
     <ProjectReference Include="..\ShadPractice.Infrastructure\ShadPractice.Infrastructure.csproj" />
-    <ProjectReference Include="..\ShadPractice.Tests\ShadPractice.Tests.csproj" />
   </ItemGroup>
 
 </Project>
