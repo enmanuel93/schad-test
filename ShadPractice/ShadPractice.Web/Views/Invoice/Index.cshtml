@@ -1,0 +1,255 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Invoices</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">List of Invoices</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fa fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+              <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="card-body">
+              <div class="content-btn-create">
+                <button type="button" class="btn btn-success btn-create"><i class="fa fa-plus"></i> Create</button>
+              </div>
+          
+              <table id="table" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+
+
+<!-- Modal Form -->
+@await Html.PartialAsync("_ModalInvoiceCreatePartialView.cshtml")
+@await Html.PartialAsync("_ModalInvoiceEditPartialView.cshtml")
+
+
+ @section Styles{
+     <link rel="stylesheet" href="~/dist/css/datatables/dataTables.bootstrap4.css">
+
+     <style>
+         .table, tbody, tr, td, button{
+             padding: 2px;
+         }
+
+         .content-btn-create{
+          padding: 10px;
+          display: flex;
+          justify-content: flex-end;
+         }
+
+         .btn-modal{
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+         }
+
+         .btn-modal button{
+            margin-left: 10px;
+         }
+
+        label.error {
+             color: red;
+             font-size: 14px;
+             margin-bottom: 0rem !important;
+        }
+
+     </style>
+}
+
+@section Scripts {
+
+     <script>
+
+
+
+        //properties
+        const btnPrint = $(".btn-print")
+        const btnEdit = $(".btn-edit")
+        const btnDelete = $(".btn-delete")
+        const btnCreate = $(".btn-create")
+
+        const btnCustom = $(".btn-custom")
+
+        //modals
+        const modalCreate = $("#modal-create")
+        const modalEdit = $("#modal-edit")
+
+
+        const modalTitle = $("#modalTitle");
+
+        const formEdit = $("#form-edit")
+        const formCreate = $("#form-create")
+
+        let tableInvoice;
+
+        let tableInvoiceDetail;
+
+          $(function () {
+           tableInvoice = $('#table').DataTable({
+              "paging": true,
+              "lengthChange": true,
+              "searching": false,
+              "ordering": true,
+              "info": true,
+              "autoWidth": false
+            });   
+
+            tableInvoiceDetail = $("#table-invoice").DataTable({
+              "paging": true,
+              "lengthChange": false,
+              "searching": false,
+              "ordering": true,
+              "info": true,
+              "autoWidth": false
+            }); 
+
+            fillDataTable()
+            
+              formEdit.validate({
+                  rules: {
+                      price: 'required',
+                      qty: 'required',
+                      customers: 'required',
+                  }
+              })
+
+              formCreate.validate({
+                  rules: {
+                      price: 'required',
+                      qty: 'required',
+                      customers: 'required',
+                  }
+              })
+
+              $('.customers').val('0')
+              $('.qty').mask('#')
+              $('.price').mask('#')
+          });
+
+          btnPrint.click(() => {
+            alert("print")
+          })
+
+          btnCreate.click(() => {
+             modalCreate.modal('show')
+             formEdit.validate().resetForm();
+             formCreate.validate().resetForm();
+             clearForm()
+          })
+
+          function edit(id){
+             modalEdit.modal('show')
+             formEdit.validate().resetForm();
+             formCreate.validate().resetForm();
+             clearForm()
+
+              $.get('@Url.Action("EditDetail","Invoice")', {id: id}, function(data) {
+                    $('.price').val(data.custName)
+                    $('.qty').val(data.adress)
+                    $('.customers').val(data.customerTypeId)
+            }).fail((error) => {
+                console.log('fail')
+            })
+          }
+
+
+          btnDelete.click(() => {
+            alert("delete")
+          })
+
+          formCreate.submit(function(e){
+              e.preventDefault()              
+
+              let model = {
+                  Price: $('.price').val(),
+                  Qty: $('.qty').val(),
+                  CustomerId: $('.customers').val()
+              }
+
+              if ((model.Price !== '') && (model.Qty !== '') && (model.CustomerId !== '')) {
+                  $.post('@Url.Action("Create","Invoice")', model, function() {
+                      window.location.href = '@Url.Action("Index", "Invoice")'
+                  }).fail((error) => {
+                      console.log('fail')
+                  })
+              }
+          })
+
+          formEdit.submit(function(e){              
+              e.preventDefault()
+          })        
+
+          function clearForm(){
+              $('.customers').val('0')
+              $('.qty').val('')
+              $('.price').val('')
+          }
+
+          function fillDataTable(){
+              $.ajax({
+                    'url': '@Url.Action("GetInvoices","Invoice")',
+                    'method': "GET",
+                    'contentType': 'application/json'
+                }).done( function(data) {
+                    console.log(data)
+                    for(let i = 0; i < data.length; i++){
+                        let dataas = data[i]
+                        tableInvoice.row.add( [ 
+                              dataas.id,
+                              dataas.custName,
+                             `<button type="button" class="btn btn-secondary btn-print" onclick="print(${dataas.id})"><i class="fa fa-print"></i></button>
+                              <!--<button type="button" class="btn btn-primary btn-edit" onclick="edit(${dataas.id})"><i class="fa fa-edit"></i></button>-->
+                              <button type="button" class="btn btn-danger btn-delete" onclick="delete(${dataas.id})"><i class="fa fa-trash"></i></button>`
+                        ]).draw();
+                    }
+                })
+          }
+          
+    </script>
+}
+

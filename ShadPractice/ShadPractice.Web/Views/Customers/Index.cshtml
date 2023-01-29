@@ -1,0 +1,271 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Customers</h1>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">List of Customers</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fa fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+              <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="card-body">
+              <div class="content-btn-create">
+                <button type="button" class="btn btn-success btn-create"><i class="fa fa-plus"></i> Create</button>
+              </div>
+          
+              <table id="table" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CustName</th>
+                  <th>Address</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+
+
+<!-- Modal Form -->
+@await Html.PartialAsync("_ModalCustomersCreatePartialView.cshtml")
+@await Html.PartialAsync("_ModalCustomersEditPartialView.cshtml")
+
+
+ @section Styles{
+     <link rel="stylesheet" href="~/dist/css/datatables/dataTables.bootstrap4.css">
+
+     <style>
+         .table, tbody, tr, td, button{
+             padding: 2px;
+         }
+
+         .content-btn-create{
+          padding: 10px;
+          display: flex;
+          justify-content: flex-end;
+         }
+
+         .btn-modal{
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+         }
+
+         .btn-modal button{
+            margin-left: 10px;
+         }
+
+        label.error {
+             color: red;
+             font-size: 14px;
+             margin-bottom: 0rem !important;
+        }
+
+     </style>
+}
+
+@section Scripts {
+
+     <script>
+
+
+
+        //properties
+        const btnPrint = $(".btn-print")
+        const btnEdit = $(".btn-edit")
+        const btnDelete = $(".btn-delete")
+        const btnCreate = $(".btn-create")
+
+        const btnCustom = $(".btn-custom")
+
+        //modals
+        const modalCreate = $("#modal-create")
+        const modalEdit = $("#modal-edit")
+
+
+        const modalTitle = $("#modalTitle");
+
+        const formEdit = $("#form-edit")
+        const formCreate = $("#form-create")
+
+        let tableCustomer;
+
+          $(function () {
+           tableCustomer = $('#table').DataTable({
+              "paging": true,
+              "lengthChange": true,
+              "searching": false,
+              "ordering": true,
+              "info": true,
+              "autoWidth": false
+            });   
+
+            fillDataTable()
+            
+              formCreate.validate({
+                  rules: {
+                      custName: 'required',
+                      address: 'required',
+                      customerType: 'required',
+                  }
+              })
+
+              formEdit.validate({
+                  rules: {
+                      custName2: 'required',
+                      address2: 'required',
+                      custType2: 'required',
+                  }
+              })
+          });
+
+          btnPrint.click(() => {
+            alert("print")
+          })
+
+          btnCreate.click(() => {
+             modalCreate.modal('show')
+             formEdit.validate().resetForm();
+             formCreate.validate().resetForm();
+             clearForm()
+          })
+
+          function edit(id){
+             modalEdit.modal('show')
+             formEdit.validate().resetForm();
+             formCreate.validate().resetForm();
+             clearForm()
+
+              $.get('@Url.Action("EditDetail","Customers")', {id: id}, function(data) {
+                    $('.custName2').val(data.custName)
+                    $('.address2').val(data.adress)
+                    $('.custType2').val(data.customerTypeId)
+                    $('.id-customer').val(data.id)
+            }).fail((error) => {
+                console.log('fail')
+            })
+          }
+
+          function deleteC(id){
+              $.post('@Url.Action("Delete","Customers")', {id: id}, function(data) {
+                    window.location.href = '@Url.Action("Index", "Customers")'
+            }).fail((error) => {
+                console.log('fail')
+            })
+          }
+
+          formCreate.submit(function(e){
+              e.preventDefault()              
+
+              let model = {
+                  CustName: $('.custName').val(),
+                  Adress: $('.address').val(),
+                  Status: true,
+                  CustomerTypeId: $('.custType').val()
+              }              
+
+              if ((model.CustName !== '') && (model.Adress !== '') && (model.CustomerTypeId !== '')) {
+                  $.post('@Url.Action("Create","Customers")', model, function() {
+                      window.location.href = '@Url.Action("Index", "Customers")'
+                  }).fail((error) => {
+                      console.log('fail')
+                  })
+              }
+          })
+
+          formEdit.submit(function(e){              
+              e.preventDefault()            
+
+              let model = {
+                  CustName: $('.custName2').val(),
+                  Adress: $('.address2').val(),
+                  CustomerTypeId: $('.custType2').val()
+              }
+
+              let idcustomer = $('.id-customer').val()
+
+              if ((model.CustName !== '') && (model.Adress !== '') && (model.CustomerTypeId !== '')) {
+                  $.post('@Url.Action("Edit","Customers")', { id: idcustomer, model: model }, function() {
+                      window.location.href = '@Url.Action("Index", "Customers")'
+                  }).fail((error) => {
+                      console.log('fail')
+                  })
+              }
+          })        
+
+          function clearForm(){
+              $('.custName').val('')
+              $('.address').val('')
+              $('.custType').val('0')
+              $('.custName2').val('')
+              $('.address2').val('')
+              $('.custType2').val('0')
+          }
+
+          function fillDataTable(){
+              $.ajax({
+                    'url': '@Url.Action("GetCustomers","Customers")',
+                    'method': "GET",
+                    'contentType': 'application/json'
+                }).done( function(data) {
+                    console.log(data)
+                    if (data.length > 0) {
+
+                        for(let i = 0; i < data.length; i++){
+                            let dataas = data[i]
+                            tableCustomer.row.add( [ 
+                                  dataas.id,
+                                  dataas.custName,
+                                  dataas.adress,
+                                  dataas.status ? `<span class="badge bg-success">active</span>` : `<span class="badge bg-danger">inactive</span>`,
+                                 `<button type="button" class="btn btn-primary btn-edit" onclick="edit(${dataas.id})"><i class="fa fa-edit"></i></button>
+                                  <button type="button" class="btn btn-danger btn-delete" onclick="deleteC(${dataas.id})"><i class="fa fa-trash"></i></button>`
+                            ]).draw();
+                        }
+                    }
+                    
+                })
+          }
+          
+    </script>
+}
+

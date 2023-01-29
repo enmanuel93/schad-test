@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShadPractice.Core\ShadPractice.Core.csproj" />
+    <ProjectReference Include="..\ShadPractice.Infrastructure\ShadPractice.Infrastructure.csproj" />
+    <ProjectReference Include="..\ShadPractice.Reports\ShadPractice.Reports.csproj" />
+    <ProjectReference Include="..\ShadPractice.Tests\ShadPractice.Tests.csproj" />
+  </ItemGroup>
+
+</Project>
