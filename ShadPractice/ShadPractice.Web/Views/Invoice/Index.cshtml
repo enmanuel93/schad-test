@@ -171,16 +171,16 @@
               $('.price').mask('#')
           });
 
-          btnPrint.click(() => {
-            alert("print")
-          })
-
           btnCreate.click(() => {
              modalCreate.modal('show')
              formEdit.validate().resetForm();
              formCreate.validate().resetForm();
              clearForm()
           })
+
+          function print(id){
+
+          }
 
           function edit(id){
              modalEdit.modal('show')
@@ -243,7 +243,7 @@
                               dataas.id,
                               dataas.custName,
                              `<button type="button" class="btn btn-secondary btn-print" onclick="print(${dataas.id})"><i class="fa fa-print"></i></button>
-                              <!--<button type="button" class="btn btn-primary btn-edit" onclick="edit(${dataas.id})"><i class="fa fa-edit"></i></button>-->
+                              <!--<button type="button" class="btn btn-primary" onclick="edit(${dataas.id})"><i class="fa fa-edit"></i></button>-->
                               <button type="button" class="btn btn-danger btn-delete" onclick="delete(${dataas.id})"><i class="fa fa-trash"></i></button>`
                         ]).draw();
                     }

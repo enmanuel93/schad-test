@@ -19,7 +19,7 @@ namespace ShadPractice.Core.Models.Mapping
             builder.Property(x => x.SubTotal).HasColumnName("SubTotal").HasColumnType("money");
             builder.Property(x => x.Total).HasColumnName("Total").HasColumnType("money");
             builder.Property(x => x.CustomerId).HasColumnName("CustomerId");
-            builder.Property(x => x.CustomerId).HasColumnName("InvoiceId");
+            builder.Property(x => x.InvoiceId).HasColumnName("InvoiceId");
 
             builder.HasOne(i => i.Invoice)
                 .WithMany(id => id.InvoiceDetails)

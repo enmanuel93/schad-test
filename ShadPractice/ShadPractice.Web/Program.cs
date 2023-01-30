@@ -3,7 +3,14 @@ using ShadPractice.Core.Contexts;
 using ShadPractice.Web.Helpers;
 using System.Configuration;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ApplicationName = typeof(Program).Assembly.FullName,
+    ContentRootPath = Directory.GetCurrentDirectory(),
+    EnvironmentName = Environments.Staging,
+    WebRootPath = "wwwroot"
+});
 
 //sql connection
 builder.Services.AddDbContext<TestInvoiceContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("TestInvoiceContext"),
@@ -37,6 +44,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Invoice}/{action=Print}/{id?}");
+    //pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

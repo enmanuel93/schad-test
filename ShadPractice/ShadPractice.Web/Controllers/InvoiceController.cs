@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AspNetCore.Reporting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ShadPractice.Core;
@@ -13,10 +14,13 @@ namespace ShadPractice.Web.Controllers
     public class InvoiceController : Controller
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public InvoiceController(IRepositoryWrapper repositoryWrapper)
+        public InvoiceController(IRepositoryWrapper repositoryWrapper, IWebHostEnvironment webHostEnvironment)
         {
             _repositoryWrapper = repositoryWrapper;
+            this._webHostEnvironment = webHostEnvironment;
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
         // GET: CustomerController
@@ -84,6 +88,7 @@ namespace ShadPractice.Web.Controllers
                 model.TotalItbis = totalItbis;
                 model.SubTotal = subTotal;
                 model.Total = total;
+                model.InvoiceId = _repositoryWrapper.Invoice.FindAll().OrderByDescending(r => r.Id).FirstOrDefault().Id; 
                 _repositoryWrapper.InvoiceDetail.Create(model);
                 _repositoryWrapper.Save();
                 return Ok(HttpStatusCode.OK);
@@ -94,6 +99,36 @@ namespace ShadPractice.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public IActionResult Print()
+        {
+            string mimtype = "";
+            int extension = 1;
+            var invoiceDetail = _repositoryWrapper.InvoiceDetail.FindByCondition(i => i.InvoiceId == 2).FirstOrDefault();
+
+            var path = $"{this._webHostEnvironment.WebRootPath}\\Reports\\RptInvoice.rdlc";
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            //parameters.Add("subtotal", customer.CustName);
+            //parameters.Add("total", customer.Adress);
+            LocalReport localReport = new LocalReport(path);
+            localReport.AddDataSource("DataSet1", invoiceDetail);
+            var result = localReport.Execute(RenderType.Pdf, extension, parameters, mimtype);
+            return File(result.MainStream, "application/pdf");
+        }
+
+        #region useless methods
         //[HttpGet]
         //public ActionResult EditDetail(int id)
         //{
@@ -120,18 +155,7 @@ namespace ShadPractice.Web.Controllers
         //        return View();
         //    }
         //}
+        #endregion
 
-        [HttpPost]
-        public ActionResult Delete(int id)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }
