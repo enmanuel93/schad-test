@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShadPractice.Core", "ShadPr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShadPractice.Infrastructure", "ShadPractice.Infrastructure\ShadPractice.Infrastructure.csproj", "{B6DA91A5-A7D8-4489-B5D6-69D092795FE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShadPractice.Reports", "ShadPractice.Reports\ShadPractice.Reports.csproj", "{59F3F708-F3E6-4E90-8D18-F40505C054EF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{B6DA91A5-A7D8-4489-B5D6-69D092795FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6DA91A5-A7D8-4489-B5D6-69D092795FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6DA91A5-A7D8-4489-B5D6-69D092795FE7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59F3F708-F3E6-4E90-8D18-F40505C054EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59F3F708-F3E6-4E90-8D18-F40505C054EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59F3F708-F3E6-4E90-8D18-F40505C054EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59F3F708-F3E6-4E90-8D18-F40505C054EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

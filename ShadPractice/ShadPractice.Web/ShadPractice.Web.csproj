@@ -26,7 +26,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ShadPractice.Core\ShadPractice.Core.csproj" />
     <ProjectReference Include="..\ShadPractice.Infrastructure\ShadPractice.Infrastructure.csproj" />
-    <ProjectReference Include="..\ShadPractice.Reports\ShadPractice.Reports.csproj" />
   </ItemGroup>
 
   <ItemGroup>
