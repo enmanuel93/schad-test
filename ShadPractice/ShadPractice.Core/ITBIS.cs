@@ -8,6 +8,6 @@ namespace ShadPractice.Core
 {
     public class ITBIS
     {
-        public static double ITBIS_PRICE = 0.18;
+        public static decimal ITBIS_PRICE = 0.18m;
     }
 }

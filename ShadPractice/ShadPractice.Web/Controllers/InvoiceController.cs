@@ -112,16 +112,18 @@ namespace ShadPractice.Web.Controllers
             }
         }
 
-        public IActionResult Print()
+        public IActionResult Print(int id)
         {
             string mimtype = "";
             int extension = 1;
-            var invoiceDetail = _repositoryWrapper.InvoiceDetail.FindByCondition(i => i.InvoiceId == 2).FirstOrDefault();
+            var invoiceDetail = _repositoryWrapper.InvoiceDetail.FindByCondition(i => i.InvoiceId == id).ToList();
+            var total = invoiceDetail.Sum(x => x.Total);
 
             var path = $"{this._webHostEnvironment.WebRootPath}\\Reports\\RptInvoice.rdlc";
             Dictionary<string, string> parameters = new Dictionary<string, string>();
-            //parameters.Add("subtotal", customer.CustName);
-            //parameters.Add("total", customer.Adress);
+
+            parameters.Add("total", total.ToString());
+
             LocalReport localReport = new LocalReport(path);
             localReport.AddDataSource("DataSet1", invoiceDetail);
             var result = localReport.Execute(RenderType.Pdf, extension, parameters, mimtype);

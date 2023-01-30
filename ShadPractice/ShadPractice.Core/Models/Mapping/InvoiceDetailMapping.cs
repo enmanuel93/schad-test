@@ -15,9 +15,9 @@ namespace ShadPractice.Core.Models.Mapping
             builder.ToTable("InvoiceDetail");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Qty).HasColumnName("Qty");
-            builder.Property(x => x.Price).HasColumnName("Price").HasColumnType("money");
-            builder.Property(x => x.SubTotal).HasColumnName("SubTotal").HasColumnType("money");
-            builder.Property(x => x.Total).HasColumnName("Total").HasColumnType("money");
+            builder.Property(x => x.Price).HasColumnName("Price");
+            builder.Property(x => x.SubTotal).HasColumnName("SubTotal");
+            builder.Property(x => x.Total).HasColumnName("Total");
             builder.Property(x => x.CustomerId).HasColumnName("CustomerId");
             builder.Property(x => x.InvoiceId).HasColumnName("InvoiceId");
 

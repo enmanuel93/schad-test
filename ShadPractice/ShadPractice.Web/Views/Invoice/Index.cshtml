@@ -179,7 +179,17 @@
           })
 
           function print(id){
-
+              var xhr = new XMLHttpRequest();
+                xhr.open("GET", '@Url.Action("Print","Invoice")?id=' + id, true);
+                xhr.responseType = "blob";
+                xhr.onload = function (e) {
+                  if (this.status == 200) {
+                    var blob = this.response;
+                    var url = URL.createObjectURL(blob);
+                    window.open(url, "_blank");
+                  }
+                };
+                xhr.send();
           }
 
           function edit(id){
@@ -197,11 +207,6 @@
             })
           }
 
-
-          btnDelete.click(() => {
-            alert("delete")
-          })
-
           formCreate.submit(function(e){
               e.preventDefault()              
 
@@ -218,11 +223,7 @@
                       console.log('fail')
                   })
               }
-          })
-
-          formEdit.submit(function(e){              
-              e.preventDefault()
-          })        
+          })     
 
           function clearForm(){
               $('.customers').val('0')
